@@ -1,0 +1,381 @@
+/* ═══════════════════════════════════════════════════════════════
+   Қыз ұзату — шақыру. Mobile-first.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --cream:      #FBF7F0;
+  --cream-deep: #F3EADA;
+  --ink:        #2E2617;
+  --ink-soft:   #6B5E48;
+  --gold:       #B08D3F;
+  --gold-lite:  #DCC182;
+  --gold-deep:  #8C6D28;
+  --line:       #E2D5BC;
+
+  --serif:  'Playfair Display', 'PT Serif', Georgia, 'Times New Roman', serif;
+  --body:   'PT Serif', Georgia, 'Times New Roman', serif;
+
+  --pad: clamp(20px, 6vw, 40px);
+}
+
+* { box-sizing: border-box; }
+
+/* Атрибут hidden обязан побеждать: у .music, .choice, .btn и .field
+   задан свой display, а он перебивает display:none от [hidden]. */
+[hidden] { display: none !important; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--cream);
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(176,141,63,.055), transparent 42%),
+    radial-gradient(circle at 82% 78%, rgba(176,141,63,.045), transparent 45%);
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+main {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: clamp(16px, 5vw, 32px) clamp(14px, 4vw, 24px) 0;
+}
+
+/* ── Орнамент ─────────────────────────────────────────────── */
+.orn {
+  height: 36px;
+  background: url('ornament.svg') repeat-x center / auto 36px;
+  opacity: .85;
+}
+.orn--flip { transform: scaleY(-1); }
+
+.rule {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 26px auto;
+  max-width: 240px;
+  color: var(--gold);
+}
+.rule::before, .rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-lite), transparent);
+}
+.rule span { font-size: 15px; line-height: 1; }
+
+/* ── Бірінші экран ────────────────────────────────────────── */
+.hero { padding: 8px 0 4px; }
+
+.frame {
+  position: relative;
+  padding: 26px var(--pad) 30px;
+  text-align: center;
+  background: linear-gradient(180deg, #FFFDF8, var(--cream-deep));
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  box-shadow: 0 1px 0 #fff inset, 0 14px 40px -24px rgba(46,38,23,.45);
+}
+/* внутренняя золотая линия */
+.frame::after {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(176,141,63,.35);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.greet {
+  margin: 22px 0 0;
+  font-family: var(--serif);
+  font-size: clamp(19px, 5.4vw, 25px);
+  font-weight: 500;
+  letter-spacing: .01em;
+}
+#guest { color: var(--gold-deep); }   /* без nowrap: длинные имена должны переноситься */
+
+.eyebrow {
+  margin: 30px 0 0;
+  font-size: 14px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.bride {
+  margin: 6px 0 2px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(46px, 15vw, 76px);
+  line-height: 1.05;
+  background: linear-gradient(175deg, var(--gold-lite) 4%, var(--gold) 44%, var(--gold-deep) 96%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: var(--gold);
+  -webkit-text-fill-color: transparent;
+  /* ә ғ қ ң ө ұ ү һ имеют выносные элементы — даём воздух */
+  padding: .06em .04em .12em;
+}
+
+.occasion {
+  margin: 4px 0 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(19px, 5vw, 24px);
+  color: var(--ink-soft);
+}
+
+.when { margin: 0 0 22px; }
+.when-date, .when-time { display: block; }
+.when-date {
+  font-family: var(--serif);
+  font-size: clamp(21px, 5.6vw, 27px);
+  letter-spacing: .01em;
+}
+.when-time {
+  margin-top: 4px;
+  font-size: 15px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.scroll-hint {
+  display: flex;
+  justify-content: center;
+  padding: 18px 0 2px;
+  color: var(--gold);
+  animation: bob 2.4s ease-in-out infinite;
+}
+.scroll-hint svg { width: 26px; height: 26px; }
+@keyframes bob {
+  0%, 100% { transform: translateY(0);   opacity: .55; }
+  50%      { transform: translateY(6px); opacity: 1; }
+}
+
+/* ── Блоки ────────────────────────────────────────────────── */
+.card {
+  padding: clamp(26px, 7vw, 40px) var(--pad);
+  text-align: center;
+  border-top: 1px solid var(--line);
+}
+.card:first-of-type { border-top: none; }
+
+h2 {
+  margin: 0 0 20px;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+
+.lead { margin: 0 0 14px; }
+.lead b { font-weight: 700; color: var(--gold-deep); }
+
+.sign {
+  margin: 22px 0 0;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+.venue {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(23px, 6vw, 29px);
+}
+.addr { margin: 6px 0 22px; color: var(--ink-soft); }
+
+.hint { margin: -12px 0 22px; font-size: 15px; color: var(--ink-soft); }
+
+/* ── Кнопки ───────────────────────────────────────────────── */
+.row, .choice {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  padding: 13px 26px;
+  border: 1px solid var(--gold);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--gold-deep);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background .18s, color .18s, border-color .18s, transform .12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active { transform: scale(.98); }
+
+.btn--ghost:hover { background: rgba(176,141,63,.09); }
+
+.btn--choice { flex: 1 1 44%; min-width: 150px; }
+.btn--choice[aria-pressed="true"] {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #fff;
+}
+
+.btn--gold {
+  width: 100%;
+  margin-top: 6px;
+  background: linear-gradient(180deg, var(--gold-lite), var(--gold));
+  border-color: var(--gold-deep);
+  color: #fff;
+  letter-spacing: .06em;
+}
+.btn--gold:disabled { opacity: .55; cursor: default; }
+
+.link {
+  margin-top: 14px;
+  padding: 10px 4px;
+  border: 0;
+  background: none;
+  color: var(--gold-deep);
+  font-family: var(--body);
+  font-size: 15px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* ── Форма ────────────────────────────────────────────────── */
+.form {
+  margin-top: 22px;
+  text-align: left;
+  animation: fade .35s ease both;
+}
+
+.field { display: block; margin-bottom: 16px; }
+.field > span {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.field > span i { font-style: italic; text-transform: none; letter-spacing: 0; }
+
+input, select, textarea {
+  width: 100%;
+  min-height: 50px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: #FFFDF8;
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;               /* < 16px → iOS зумит страницу */
+  line-height: 1.4;
+}
+textarea { min-height: 88px; resize: vertical; }
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(176,141,63,.14);
+}
+
+.err {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 2px;
+  background: #FBEAE7;
+  color: #8E2C1B;
+  font-size: 15px;
+}
+
+.done { animation: fade .35s ease both; }
+.done-title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(26px, 7vw, 34px);
+  color: var(--gold-deep);
+}
+.done-text { margin: 8px 0 0; color: var(--ink-soft); }
+
+@keyframes fade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ── Контакты ─────────────────────────────────────────────── */
+.contacts { margin: 0; padding: 0; list-style: none; }
+.contacts li + li { margin-top: 10px; }
+.contacts .who { color: var(--ink-soft); }
+.contacts a {
+  display: inline-block;
+  padding: 6px 2px;
+  font-family: var(--serif);
+  font-size: 21px;
+  color: var(--gold-deep);
+  text-decoration: none;
+  border-bottom: 1px solid var(--gold-lite);
+}
+
+/* ── Подвал ───────────────────────────────────────────────── */
+footer { padding: 8px 0 40px; text-align: center; }
+footer p {
+  margin: 20px 0 0;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+/* ── Кнопка музыки ────────────────────────────────────────── */
+.music {
+  position: fixed;
+  right: max(14px, env(safe-area-inset-right));
+  bottom: max(14px, env(safe-area-inset-bottom));
+  z-index: 10;
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  background: rgba(251,247,240,.94);
+  backdrop-filter: blur(6px);
+  color: var(--gold-deep);
+  cursor: pointer;
+  box-shadow: 0 6px 20px -10px rgba(46,38,23,.6);
+}
+.music svg { width: 22px; height: 22px; }
+.music[aria-pressed="true"] { background: var(--gold); color: #fff; }
+.music[aria-pressed="true"] svg { animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .5; }
+}
+
+/* ── Появление при скролле ────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.reveal.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .scroll-hint, .music[aria-pressed="true"] svg { animation: none; }
+  .form, .done { animation: none; }
+}

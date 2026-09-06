@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Генератор ссылок для гостей</title>
+<style>
+  :root { --gold:#B08D3F; --line:#E2D5BC; --ink:#2E2617; }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; padding:24px 16px 64px; background:#FBF7F0; color:var(--ink);
+    font:16px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  h1 { font-size:24px; margin:0 0 6px; }
+  .sub { margin:0 0 28px; color:#6B5E48; }
+  label { display:block; margin:0 0 6px; font-size:13px; letter-spacing:.08em;
+          text-transform:uppercase; color:#6B5E48; }
+  input, textarea {
+    width:100%; padding:11px 13px; margin-bottom:18px; font:inherit; font-size:15px;
+    border:1px solid var(--line); border-radius:3px; background:#fff; color:var(--ink);
+  }
+  textarea { min-height:130px; resize:vertical; font-family:ui-monospace, SFMono-Regular, Menlo, monospace; }
+  input:focus, textarea:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(176,141,63,.14); }
+  button {
+    padding:11px 20px; font:inherit; font-size:15px; border-radius:3px; cursor:pointer;
+    border:1px solid var(--gold); background:var(--gold); color:#fff;
+  }
+  button.ghost { background:#fff; color:#8C6D28; }
+  button.mini { padding:6px 11px; font-size:13px; }
+  .bar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  table { width:100%; border-collapse:collapse; margin-top:26px; font-size:14px; }
+  th, td { padding:10px 8px; border-bottom:1px solid var(--line); text-align:left; vertical-align:middle; }
+  th { font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#6B5E48; }
+  td.link { font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:12px;
+            word-break:break-all; color:#6B5E48; }
+  td.act { white-space:nowrap; text-align:right; }
+  .hint { margin-top:26px; padding:14px 16px; border-left:3px solid var(--gold);
+          background:#F3EADA; font-size:14px; }
+  code { background:#fff; padding:1px 5px; border-radius:3px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Ссылки для гостей</h1>
+  <p class="sub">Служебная страница. Каждому гостю — своя ссылка, его имя подставится в приглашение
+     и попадёт в таблицу вместе с ответом.</p>
+
+  <label for="base">Адрес приглашения</label>
+  <input id="base" type="url" spellcheck="false">
+
+  <label for="names">Список гостей — по одному в строке</label>
+  <textarea id="names" spellcheck="false" placeholder="Ерлан аға
+Гүлнар апай
+Асқар мен Айгүл"></textarea>
+
+  <label for="tpl">Текст сообщения <span style="text-transform:none;letter-spacing:0">(<code>{name}</code> — имя, <code>{link}</code> — ссылка)</span></label>
+  <textarea id="tpl" style="min-height:90px">Құрметті {name}!
+Сізді қыз ұзату тойымызға шақырамыз.
+Шақыру: {link}</textarea>
+
+  <div class="bar">
+    <button id="go">Сгенерировать</button>
+    <button id="copy-all" class="ghost" hidden>Скопировать все (для таблицы)</button>
+  </div>
+
+  <div id="out"></div>
+
+  <div class="hint">
+    Кнопка <b>WhatsApp</b> открывает чат с уже готовым текстом — остаётся выбрать получателя.
+    Кнопка <b>Скопировать все</b> кладёт в буфер две колонки «имя / ссылка» — их можно
+    вставить прямо в Google Таблицу.
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+
+  // Приглашение лежит рядом: .../links.html → .../
+  $('base').value = location.origin + location.pathname.replace(/links\.html$/, '');
+
+  var rows = [];
+
+  function build() {
+    var base = $('base').value.trim().replace(/\?.*$/, '');
+    var tpl  = $('tpl').value;
+
+    rows = $('names').value
+      .split('\n')
+      .map(function (s) { return s.trim(); })
+      .filter(Boolean)
+      .map(function (name) {
+        var link = base + '?g=' + encodeURIComponent(name);
+        return { name: name, link: link, msg: tpl.split('{name}').join(name).split('{link}').join(link) };
+      });
+
+    render();
+  }
+
+  function render() {
+    var out = $('out');
+    out.textContent = '';
+    $('copy-all').hidden = rows.length === 0;
+    if (!rows.length) return;
+
+    var table = document.createElement('table');
+    table.innerHTML = '<thead><tr><th>Гость</th><th>Ссылка</th><th></th></tr></thead>';
+    var tbody = document.createElement('tbody');
+
+    rows.forEach(function (r) {
+      var tr = document.createElement('tr');
+
+      var tdName = document.createElement('td');
+      tdName.textContent = r.name;                 // не innerHTML: имена вводятся руками
+
+      var tdLink = document.createElement('td');
+      tdLink.className = 'link';
+      tdLink.textContent = r.link;
+
+      var tdAct = document.createElement('td');
+      tdAct.className = 'act';
+
+      var bCopy = document.createElement('button');
+      bCopy.className = 'ghost mini';
+      bCopy.textContent = 'Копировать';
+      bCopy.onclick = function () {
+        navigator.clipboard.writeText(r.msg).then(function () {
+          bCopy.textContent = 'Скопировано';
+          setTimeout(function () { bCopy.textContent = 'Копировать'; }, 1400);
+        });
+      };
+
+      var aWa = document.createElement('a');
+      aWa.href = 'https://wa.me/?text=' + encodeURIComponent(r.msg);
+      aWa.target = '_blank';
+      aWa.rel = 'noopener';
+      aWa.style.marginLeft = '8px';
+      var bWa = document.createElement('button');
+      bWa.className = 'ghost mini';
+      bWa.textContent = 'WhatsApp';
+      aWa.appendChild(bWa);
+
+      var aOpen = document.createElement('a');
+      aOpen.href = r.link;
+      aOpen.target = '_blank';
+      aOpen.rel = 'noopener';
+      aOpen.style.marginLeft = '8px';
+      var bOpen = document.createElement('button');
+      bOpen.className = 'ghost mini';
+      bOpen.textContent = 'Открыть';
+      aOpen.appendChild(bOpen);
+
+      tdAct.append(bCopy, aWa, aOpen);
+      tr.append(tdName, tdLink, tdAct);
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    out.appendChild(table);
+  }
+
+  $('go').onclick = build;
+
+  $('copy-all').onclick = function () {
+    var tsv = rows.map(function (r) { return r.name + '\t' + r.link; }).join('\n');
+    navigator.clipboard.writeText(tsv).then(function () {
+      $('copy-all').textContent = 'Скопировано';
+      setTimeout(function () { $('copy-all').textContent = 'Скопировать все (для таблицы)'; }, 1600);
+    });
+  };
+})();
+</script>
+</body>
+</html>

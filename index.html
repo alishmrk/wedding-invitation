@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Қыз ұзату тойына шақыру</title>
+<meta name="description" content="Қыз ұзату тойына арналған шақыру">
+<meta name="theme-color" content="#FBF7F0">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Қыз ұзату тойына шақыру">
+<meta property="og:description" content="Ақ дастарханымыздың қадірлі қонағы болуыңызды сұраймыз">
+<meta property="og:locale" content="kk_KZ">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<button class="music" id="music-btn" type="button" hidden
+        aria-label="Әуенді қосу" title="Әуен">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="16.5" cy="16" r="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+</button>
+
+<main>
+
+  <!-- ── Бірінші экран ─────────────────────────────────────── -->
+  <section class="hero">
+    <div class="frame">
+      <div class="orn" aria-hidden="true"></div>
+
+      <p class="greet">Құрметті <span id="guest">қонақтар</span>!</p>
+
+      <p class="eyebrow">Сіздерді</p>
+      <h1 class="bride" id="bride">Айсұлу</h1>
+      <p class="occasion">қыз ұзату тойына<br>шақырамыз</p>
+
+      <div class="rule" aria-hidden="true"><span>❦</span></div>
+
+      <p class="when">
+        <span class="when-date" id="date-text">15 қазан 2026 жыл</span>
+        <span class="when-time" id="time-text">сағат 18:00</span>
+      </p>
+
+      <div class="orn orn--flip" aria-hidden="true"></div>
+    </div>
+    <div class="scroll-hint" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </section>
+
+  <!-- ── Шақыру мәтіні ─────────────────────────────────────── -->
+  <section class="card reveal">
+    <h2>Шақыру</h2>
+    <p class="lead">
+      Аяулы қызымыз <b id="bride-2">Айсұлу</b> өмірлік жарын тауып,
+      жаңа шаңырақ көтергелі отыр.
+    </p>
+    <p class="lead">
+      Осы қуанышты күні ақ дастарханымыздың қадірлі қонағы болып,
+      ізгі тілегіңізбен ақ батаңызды беруіңізді сұраймыз.
+    </p>
+    <p class="sign">Ізетпен, <span id="parents">Ерлан мен Гүлнар</span></p>
+  </section>
+
+  <!-- ── Мекенжайы ─────────────────────────────────────────── -->
+  <section class="card reveal">
+    <h2>Мекенжайы</h2>
+    <p class="venue" id="venue">Достар мейрамханасы</p>
+    <p class="addr" id="address">Алматы қ., Абай даңғылы, 150</p>
+    <div class="row">
+      <a class="btn btn--ghost" id="map-2gis" target="_blank" rel="noopener" hidden>2GIS-те ашу</a>
+      <a class="btn btn--ghost" id="map-google" target="_blank" rel="noopener" hidden>Google Maps</a>
+    </div>
+  </section>
+
+  <!-- ── RSVP ──────────────────────────────────────────────── -->
+  <section class="card reveal" id="rsvp">
+    <h2>Тойға келесіз бе?</h2>
+    <p class="hint">Жауабыңызды төмендегі батырмамен білдіріңіз</p>
+
+    <div class="choice" role="group" aria-label="Жауап">
+      <button type="button" class="btn btn--choice" data-answer="Келемін">Келемін</button>
+      <button type="button" class="btn btn--choice" data-answer="Келе алмаймын">Келе алмаймын</button>
+    </div>
+
+    <form class="form" id="rsvp-form" hidden>
+      <label class="field">
+        <span>Атыңыз</span>
+        <input type="text" id="f-name" maxlength="60" autocomplete="name" required>
+      </label>
+
+      <label class="field" id="f-guests-wrap">
+        <span>Қанша адам боласыз?</span>
+        <select id="f-guests">
+          <option>1</option><option>2</option><option>3</option>
+          <option>4</option><option>5</option><option>5+</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Тілегіңіз <i>(қаласаңыз)</i></span>
+        <textarea id="f-note" rows="3" maxlength="500"></textarea>
+      </label>
+
+      <button type="submit" class="btn btn--gold" id="f-send">Жіберу</button>
+      <p class="err" id="f-err" hidden role="alert"></p>
+    </form>
+
+    <div class="done" id="rsvp-done" hidden>
+      <div class="rule" aria-hidden="true"><span>❦</span></div>
+      <p class="done-title" id="done-title">Рақмет!</p>
+      <p class="done-text" id="done-text"></p>
+      <button type="button" class="link" id="redo">Жауапты өзгерту</button>
+    </div>
+  </section>
+
+  <!-- ── Байланыс ──────────────────────────────────────────── -->
+  <section class="card reveal">
+    <h2>Байланыс</h2>
+    <ul class="contacts" id="contacts"></ul>
+  </section>
+
+  <footer>
+    <div class="orn" aria-hidden="true"></div>
+    <p>Той думанды болсын!</p>
+  </footer>
+
+</main>
+
+<audio id="bg-music" loop preload="none"></audio>
+
+<script src="config.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
