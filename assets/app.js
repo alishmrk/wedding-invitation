@@ -26,7 +26,8 @@
   })();
 
   /* ── Заполняем страницу ───────────────────────────────────── */
-  put('bride',      C.bride);
+  put('bride',      C.brideLat || C.bride);
+  put('occasion',   C.occasionLat);
   put('bride-2',    C.brideGen || (C.bride ? C.bride + 'ның' : ''));
   put('hosts',      C.hosts || C.parents);
   put('cal-date',   C.dateText);

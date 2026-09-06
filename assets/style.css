@@ -13,6 +13,9 @@
 
   --serif:  'Cormorant Infant', Georgia, 'Times New Roman', serif;
   --script: 'Caveat', 'Cormorant Infant', cursive;
+  /* Латиница на первом экране — можно взять настоящую каллиграфию:
+     Great Vibes покрывает только латиницу, для казахской кириллицы он не годится. */
+  --calligraphy: 'Great Vibes', 'Caveat', cursive;
 
   --pad: clamp(22px, 7vw, 44px);
 }
@@ -109,9 +112,17 @@ body {
   letter-spacing: .3em;
   text-indent: .3em;             /* компенсируем трекинг справа */
   text-transform: uppercase;
-  color: var(--cream);
+  color: var(--gold);          /* в шаблоне имя золотое, не кремовое */
 }
-.hero .script--xl { color: var(--gold); margin-top: 2px; }
+
+.calligraphy {
+  margin: 4px 0 0;
+  font-family: var(--calligraphy);
+  font-weight: 400;
+  line-height: 1.15;
+  font-size: clamp(40px, 12.5vw, 58px);
+  color: var(--gold);
+}
 
 .arch {
   /* пропорции = пропорции фото (853×1280), чтобы кроп ничего не срезал */
