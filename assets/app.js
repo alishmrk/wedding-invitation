@@ -42,7 +42,10 @@
 
   (function photo() {
     var img = $('photo');
-    if (C.photo) { img.src = C.photo; }
+    if (C.photo) {
+      img.src = C.photo;
+      img.alt = (C.bride ? C.bride + ' — ' : '') + 'қыз ұзату тойы';
+    }
     else { $('arch').hidden = true; }
   })();
 

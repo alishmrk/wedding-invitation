@@ -114,8 +114,9 @@ body {
 .hero .script--xl { color: var(--gold); margin-top: 2px; }
 
 .arch {
-  width: min(64%, 250px);
-  aspect-ratio: 3 / 4;
+  /* пропорции = пропорции фото (853×1280), чтобы кроп ничего не срезал */
+  width: min(70%, 268px);
+  aspect-ratio: 2 / 3;
   margin: clamp(24px, 7vw, 38px) auto 0;
   border: 1px solid var(--gold);
   border-radius: 999px 999px 10px 10px;
