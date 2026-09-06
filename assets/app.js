@@ -14,30 +14,40 @@
     if (el && value) el.textContent = value;
   }
 
+  var MONTHS = ['қаңтар', 'ақпан', 'наурыз', 'сәуір', 'мамыр', 'маусым',
+                'шілде', 'тамыз', 'қыркүйек', 'қазан', 'қараша', 'желтоқсан'];
+  var WEEKDAYS = ['Дс', 'Сс', 'Ср', 'Бс', 'Жм', 'Сн', 'Жс'];   // с понедельника
+
   /* ── Имя гостя из ссылки: ?g=Ерлан%20аға ──────────────────── */
-  function guestFromUrl() {
+  var guest = (function () {
     var q = new URLSearchParams(location.search);
     var raw = q.get('g') || q.get('to') || q.get('name') || '';
     return raw.replace(/\s+/g, ' ').trim().slice(0, 60);
-  }
+  })();
 
-  var guest = guestFromUrl();
+  /* ── Заполняем страницу ───────────────────────────────────── */
+  put('bride',      C.bride);
+  put('bride-2',    C.brideGen || (C.bride ? C.bride + 'ның' : ''));
+  put('hosts',      C.hosts || C.parents);
+  put('cal-date',   C.dateText);
+  put('cal-time',   C.timeText);
+  put('city',       C.city);
+  put('address',    C.address);
+  put('venue',      C.venue ? '«' + C.venue + '»' : '');
 
-  /* ── Заполняем страницу из config.js ──────────────────────── */
-  put('guest',     guest || 'қонақтар');
-  put('bride',     C.bride);
-  put('bride-2',   C.bride);
-  put('parents',   C.parents);
-  put('date-text', C.dateText);
-  put('time-text', C.timeText);
-  put('venue',     C.venue);
-  put('address',   C.address);
+  /* Персональная ссылка — обращаемся по имени, иначе общий список */
+  put('guest-line', guest || C.audience);
 
   if (C.bride) document.title = C.bride + ' — қыз ұзату тойына шақыру';
 
+  (function photo() {
+    var img = $('photo');
+    if (C.photo) { img.src = C.photo; }
+    else { $('arch').hidden = true; }
+  })();
+
   (function maps() {
-    var pairs = [['map-2gis', C.map2gis], ['map-google', C.mapGoogle]];
-    pairs.forEach(function (p) {
+    [['map-2gis', C.map2gis], ['map-google', C.mapGoogle]].forEach(function (p) {
       var el = $(p[0]);
       if (el && p[1]) { el.href = p[1]; el.hidden = false; }
     });
@@ -45,14 +55,14 @@
 
   (function contacts() {
     var ul = $('contacts');
-    if (!ul || !Array.isArray(C.contacts)) return;
+    if (!ul || !Array.isArray(C.contacts) || !C.contacts.length) return;
     C.contacts.forEach(function (c) {
       if (!c || !c.tel) return;
       var li = document.createElement('li');
       if (c.name) {
         var who = document.createElement('span');
         who.className = 'who';
-        who.textContent = c.name + ' — ';
+        who.textContent = c.name + ' ';
         li.appendChild(who);
       }
       var a = document.createElement('a');
@@ -63,58 +73,158 @@
     });
   })();
 
-  /* ── RSVP ─────────────────────────────────────────────────── */
-  var form       = $('rsvp-form');
-  var doneBox    = $('rsvp-done');
-  var errBox     = $('f-err');
-  var nameInput  = $('f-name');
-  var guestsWrap = $('f-guests-wrap');
-  var sendBtn    = $('f-send');
-  var choiceBtns = Array.prototype.slice.call(
-    document.querySelectorAll('[data-answer]')
-  );
+  /* ── Календарь ────────────────────────────────────────────── */
+  /* Год/месяц/день берём из строки, а не из Date: иначе у гостя
+     в другом часовом поясе подсветился бы соседний день. */
+  var parts = /^(\d{4})-(\d{2})-(\d{2})/.exec(C.dateISO || '');
 
-  var answer = '';
+  (function calendar() {
+    var table = $('cal');
+    if (!table || !parts) { if (table) table.hidden = true; return; }
+
+    var year = +parts[1], month = +parts[2] - 1, day = +parts[3];
+
+    var head = document.createElement('tr');
+    WEEKDAYS.forEach(function (w) {
+      var th = document.createElement('th');
+      th.textContent = w;
+      th.scope = 'col';
+      head.appendChild(th);
+    });
+    var thead = document.createElement('thead');
+    thead.appendChild(head);
+    table.appendChild(thead);
+
+    var first = new Date(year, month, 1);
+    var lead = (first.getDay() + 6) % 7;            // Date: вс=0, нам нужен пн=0
+    var total = new Date(year, month + 1, 0).getDate();
+
+    var tbody = document.createElement('tbody');
+    var tr = document.createElement('tr');
+    var cell = 0;
+
+    for (var i = 0; i < lead; i++) { tr.appendChild(document.createElement('td')); cell++; }
+
+    for (var d = 1; d <= total; d++) {
+      if (cell === 7) { tbody.appendChild(tr); tr = document.createElement('tr'); cell = 0; }
+      var td = document.createElement('td');
+      td.textContent = d;
+      if (d === day) {
+        td.className = 'mark';
+        td.setAttribute('aria-current', 'date');
+      }
+      tr.appendChild(td);
+      cell++;
+    }
+    while (cell < 7) { tr.appendChild(document.createElement('td')); cell++; }
+    tbody.appendChild(tr);
+    table.appendChild(tbody);
+
+    if (!C.dateText) put('cal-date', day + ' ' + MONTHS[month] + ' ' + year);
+  })();
+
+  /* ── Кері санақ ───────────────────────────────────────────── */
+  (function countdown() {
+    var box = $('count');
+    var target = C.dateISO ? new Date(C.dateISO) : null;
+    if (!box || !target || isNaN(target)) { if (box) box.hidden = true; return; }
+
+    var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+
+    function tick() {
+      var left = target - new Date();
+      if (left <= 0) {                     // той начался — обнуляем, а не уходим в минус
+        $('c-d').textContent = $('c-h').textContent =
+        $('c-m').textContent = $('c-s').textContent = '00';
+        clearInterval(timer);
+        return;
+      }
+      var s = Math.floor(left / 1000);
+      $('c-d').textContent = pad(Math.floor(s / 86400));
+      $('c-h').textContent = pad(Math.floor(s / 3600) % 24);
+      $('c-m').textContent = pad(Math.floor(s / 60) % 60);
+      $('c-s').textContent = pad(s % 60);
+    }
+    tick();
+    var timer = setInterval(tick, 1000);
+  })();
+
+  /* ── Сауалнама ────────────────────────────────────────────── */
+  var form      = $('rsvp-form');
+  var doneBox   = $('rsvp-done');
+  var errBox    = $('f-err');
+  var nameInput = $('f-name');
+  var guestWrap = $('f-guests-wrap');
+  var guestVal  = $('g-val');
+  var sendBtn   = $('f-send');
+
   var STORE = 'uzatu-rsvp';
+  var ANSWERS = Array.isArray(C.answers) && C.answers.length ? C.answers : [
+    { text: 'Келемін',         guests: true  },
+    { text: 'Келе алмаймын',   guests: false },
+  ];
 
-  if (nameInput && guest) nameInput.value = guest;
+  if (guest) nameInput.value = guest;
 
-  /* Заметка организатору, а не гостю — поэтому по-русски.
-     Показывается, только пока rsvpUrl в config.js пустой. */
+  /* Заметка организатору, а не гостю — поэтому по-русски. */
   if (!C.rsvpUrl) {
     var warn = document.createElement('p');
     warn.className = 'err';
-    warn.style.marginBottom = '18px';
-    warn.textContent =
-      '⚠️ config.js → rsvpUrl не заполнен. Ответы гостей никуда не сохраняются. ' +
-      'Инструкция — в README.md.';
-    var rsvpSection = $('rsvp');
-    rsvpSection.insertBefore(warn, rsvpSection.querySelector('.choice'));
+    warn.textContent = '⚠️ config.js → rsvpUrl не заполнен. Ответы гостей ' +
+                       'никуда не сохраняются. Инструкция — в README.md.';
+    form.parentNode.insertBefore(warn, form);
   }
 
-  choiceBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      answer = btn.dataset.answer;
-      choiceBtns.forEach(function (b) {
-        b.setAttribute('aria-pressed', String(b === btn));
-      });
-      form.hidden = false;
-      /* «Қанша адам» имеет смысл только для тех, кто придёт */
-      guestsWrap.hidden = (answer !== 'Келемін');
-      if (!nameInput.value) nameInput.focus();
-    });
-  });
+  (function buildAnswers() {
+    var box = $('f-answers');
+    ANSWERS.forEach(function (a, i) {
+      var label = document.createElement('label');
+      label.className = 'opt';
 
-  function showDone(ans) {
+      var input = document.createElement('input');
+      input.type = 'radio';
+      input.name = 'answer';
+      input.value = a.text;
+      input.required = true;
+      input.dataset.guests = a.guests ? '1' : '';
+
+      var dot = document.createElement('span');
+      dot.className = 'dot';
+
+      var txt = document.createElement('span');
+      txt.className = 'txt';
+      txt.textContent = a.text;
+
+      label.append(input, dot, txt);
+      box.appendChild(label);
+
+      input.addEventListener('change', function () {
+        guestWrap.hidden = !input.dataset.guests;
+      });
+      if (i === 0) { /* по умолчанию ничего не выбрано */ }
+    });
+  })();
+
+  /* Счётчик гостей */
+  (function counter() {
+    var n = 1;
+    var draw = function () { guestVal.textContent = n; };
+    $('g-minus').addEventListener('click', function () { if (n > 1)  { n--; draw(); } });
+    $('g-plus') .addEventListener('click', function () { if (n < 20) { n++; draw(); } });
+    guestWrap.getCount = function () { return n; };
+  })();
+
+  function chosen() {
+    return form.querySelector('input[name="answer"]:checked');
+  }
+
+  function showDone(answerText, coming) {
     form.hidden = true;
-    document.querySelector('.choice').hidden = true;
-    var h = document.querySelector('#rsvp .hint');
-    if (h) h.hidden = true;
     doneBox.hidden = false;
-    $('done-title').textContent = ans === 'Келемін' ? 'Рақмет!' : 'Түсіндік';
-    $('done-text').textContent = ans === 'Келемін'
-      ? 'Жауабыңыз қабылданды. Тойда кездескенше!'
-      : 'Жауабыңыз қабылданды. Келе алмағаныңыз өкінішті.';
+    $('done-title').textContent = coming ? 'Рақмет!' : 'Түсіндік';
+    $('done-text').textContent = coming
+      ? 'ЖАУАБЫҢЫЗ ҚАБЫЛДАНДЫ. ТОЙДА КЕЗДЕСКЕНШЕ!'
+      : 'ЖАУАБЫҢЫЗ ҚАБЫЛДАНДЫ. КЕЛЕ АЛМАҒАНЫҢЫЗ ӨКІНІШТІ.';
   }
 
   /* Apps Script и CORS: Content-Type: text/plain делает запрос
@@ -145,35 +255,38 @@
     e.preventDefault();
     errBox.hidden = true;
 
+    var pick = chosen();
     var who = nameInput.value.trim();
     if (!who) { nameInput.focus(); return; }
+    if (!pick) { return; }
 
+    var coming = !!pick.dataset.guests;
     var payload = {
       name:   who,
-      answer: answer,
-      guests: answer === 'Келемін' ? $('f-guests').value : '',
+      answer: pick.value,
+      guests: coming ? String(guestWrap.getCount()) : '',
       note:   $('f-note').value.trim(),
       link:   guest,
       page:   location.href,
     };
 
-    if (!C.rsvpUrl) { showDone(answer); return; }
+    if (!C.rsvpUrl) { showDone(pick.value, coming); return; }
 
     sendBtn.disabled = true;
-    sendBtn.textContent = 'Жіберілуде…';
+    sendBtn.textContent = 'ЖІБЕРІЛУДЕ…';
 
     send(payload).then(function () {
       try {
-        localStorage.setItem(STORE, JSON.stringify({ answer: answer, name: who }));
+        localStorage.setItem(STORE, JSON.stringify(
+          { answer: pick.value, coming: coming, name: who }));
       } catch (_) {}
-      showDone(answer);
+      showDone(pick.value, coming);
     }).catch(function () {
-      errBox.textContent =
-        'Жіберу кезінде қате шықты. Қайта көріңіз немесе телефон арқылы хабарласыңыз.';
+      errBox.textContent = 'ЖІБЕРУ КЕЗІНДЕ ҚАТЕ ШЫҚТЫ. ҚАЙТА КӨРІҢІЗ.';
       errBox.hidden = false;
     }).then(function () {
       sendBtn.disabled = false;
-      sendBtn.textContent = 'Жіберу';
+      sendBtn.textContent = 'ЖІБЕРУ';
     });
   });
 
@@ -182,22 +295,19 @@
     var saved;
     try { saved = JSON.parse(localStorage.getItem(STORE) || 'null'); } catch (_) {}
     if (saved && saved.answer) {
-      answer = saved.answer;
-      if (saved.name && nameInput) nameInput.value = saved.name;
-      showDone(saved.answer);
+      if (saved.name) nameInput.value = saved.name;
+      showDone(saved.answer, !!saved.coming);
     }
   })();
 
-  /* Передумал — возвращаем кнопки выбора */
   $('redo').addEventListener('click', function () {
     try { localStorage.removeItem(STORE); } catch (_) {}
     doneBox.hidden = true;
-    document.querySelector('.choice').hidden = false;
-    var h = document.querySelector('#rsvp .hint');
-    if (h) h.hidden = false;
-    choiceBtns.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
-    answer = '';
-    document.querySelector('.choice').scrollIntoView({ block: 'center', behavior: 'smooth' });
+    form.hidden = false;
+    var pick = chosen();
+    if (pick) pick.checked = false;
+    guestWrap.hidden = true;
+    form.scrollIntoView({ block: 'center', behavior: 'smooth' });
   });
 
   /* ── Музыка ───────────────────────────────────────────────── */
@@ -207,7 +317,6 @@
     var btn   = $('music-btn');
     audio.src = C.music;
     btn.hidden = false;
-    btn.setAttribute('aria-pressed', 'false');
 
     /* Автозапуска нет намеренно: браузеры его блокируют,
        и звук без спроса раздражает. Только по клику. */
@@ -215,32 +324,18 @@
       if (audio.paused) {
         audio.play().then(function () {
           btn.setAttribute('aria-pressed', 'true');
-          btn.setAttribute('aria-label', 'Әуенді өшіру');
+          btn.textContent = 'ӘУЕНДІ ӨШІРУ';
         }).catch(function () {});
       } else {
         audio.pause();
         btn.setAttribute('aria-pressed', 'false');
-        btn.setAttribute('aria-label', 'Әуенді қосу');
+        btn.textContent = 'ӘУЕНДІ ҚОСУ';
       }
     });
   })();
 
-  /* ── Появление блоков при скролле ─────────────────────────── */
-  (function reveal() {
-    var items = document.querySelectorAll('.reveal');
-    if (!('IntersectionObserver' in window)) {
-      items.forEach(function (el) { el.classList.add('in'); });
-      return;
-    }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (en.isIntersecting) {
-          en.target.classList.add('in');
-          io.unobserve(en.target);
-        }
-      });
-    }, { rootMargin: '0px 0px -12% 0px' });
-    items.forEach(function (el) { io.observe(el); });
-  })();
+  $('totop').addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 
 })();

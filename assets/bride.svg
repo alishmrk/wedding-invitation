@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800">
+  <!-- Заглушка. Замените на своё фото: положите файл в assets/
+       и впишите его имя в config.js → photo. Пропорции ~3:4. -->
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8E2020"/>
+      <stop offset="1" stop-color="#5E0E0E"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="800" fill="url(#g)"/>
+  <g fill="none" stroke="#E4AA5C" stroke-width="2" opacity=".55">
+    <circle cx="300" cy="330" r="78"/>
+    <path d="M300 252c-26 34-26 122 0 156 26-34 26-122 0-156z"/>
+    <path d="M222 330c34 26 122 26 156 0-34-26-122-26-156 0z"/>
+  </g>
+  <text x="300" y="486" text-anchor="middle" fill="#E4AA5C"
+        font-family="Georgia, serif" font-size="30" letter-spacing="7">ФОТО</text>
+  <text x="300" y="524" text-anchor="middle" fill="#E4AA5C" opacity=".7"
+        font-family="Georgia, serif" font-size="19" letter-spacing="2">config.js → photo</text>
+</svg>

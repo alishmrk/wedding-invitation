@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Қыз ұзату тойына шақыру</title>
 <meta name="description" content="Қыз ұзату тойына арналған шақыру">
-<meta name="theme-color" content="#FBF7F0">
+<meta name="theme-color" content="#7C1616">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="Қыз ұзату тойына шақыру">
@@ -14,121 +14,148 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Caveat:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 
-<button class="music" id="music-btn" type="button" hidden
-        aria-label="Әуенді қосу" title="Әуен">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="16.5" cy="16" r="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
-</button>
+<!-- ══ 1. Бірінші экран ══════════════════════════════════════ -->
+<section class="s wine hero">
+  <h1 class="bride" id="bride">Алина</h1>
+  <p class="script script--xl">қыз ұзату</p>
 
-<main>
+  <div class="arch" id="arch">
+    <img id="photo" alt="" decoding="async">
+  </div>
 
-  <!-- ── Бірінші экран ─────────────────────────────────────── -->
-  <section class="hero">
-    <div class="frame">
-      <div class="orn" aria-hidden="true"></div>
+  <button class="pill" id="music-btn" type="button" hidden aria-pressed="false">ӘУЕНДІ ҚОСУ</button>
 
-      <p class="greet">Құрметті <span id="guest">қонақтар</span>!</p>
+  <svg class="tear tear--down" viewBox="0 0 1000 30" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 30V13c40-7 82 6 132-2s78 8 133 1 88 8 148 0 88 7 148-1 84 6 144-1 90 7 150-1 76 5 145-3v23z"/>
+  </svg>
+</section>
 
-      <p class="eyebrow">Сіздерді</p>
-      <h1 class="bride" id="bride">Айсұлу</h1>
-      <p class="occasion">қыз ұзату тойына<br>шақырамыз</p>
+<!-- ══ 2. Шақыру ═════════════════════════════════════════════ -->
+<section class="s cream">
+  <p class="script script--l">Құрметті</p>
+  <p class="caps audience"><span id="guest-line">ағайын-туыс, бауырлар</span></p>
 
-      <div class="rule" aria-hidden="true"><span>❦</span></div>
+  <p class="caps mt">СІЗДЕРДІ АЯУЛЫ ҚЫЗЫМЫЗ</p>
+  <p class="script script--l" id="bride-2">Алинаның</p>
+  <p class="caps">
+    ҰЗАТУ ТОЙЫНА АРНАЛҒАН АҚ ДАСТАРХАНЫМЫЗДЫҢ
+    ҚАДІРЛІ ҚОНАҒЫ БОЛУҒА ШАҚЫРАМЫЗ!
+  </p>
+</section>
 
-      <p class="when">
-        <span class="when-date" id="date-text">15 қазан 2026 жыл</span>
-        <span class="when-time" id="time-text">сағат 18:00</span>
-      </p>
+<!-- ══ 3. Күні ═══════════════════════════════════════════════ -->
+<section class="s wine s--cal">
+  <svg class="tear tear--up" viewBox="0 0 1000 30" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 0v17c40 7 82-6 132 2s78-8 133-1 88-8 148 0 88-7 148 1 84-6 144 1 90-7 150 1 76-5 145 3V0z"/>
+  </svg>
 
-      <div class="orn orn--flip" aria-hidden="true"></div>
+  <p class="script script--xl" id="cal-date">16 қазан 2026</p>
+  <table class="cal" id="cal" aria-label="Той күні"></table>
+  <p class="script script--l" id="cal-time">сағат 18:00-де</p>
+
+  <svg class="tear tear--down" viewBox="0 0 1000 30" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 30V13c40-7 82 6 132-2s78 8 133 1 88 8 148 0 88 7 148-1 84 6 144-1 90 7 150-1 76 5 145-3v23z"/>
+  </svg>
+</section>
+
+<!-- ══ 4. Мекенжайы ══════════════════════════════════════════ -->
+<section class="s cream">
+  <p class="script script--l">Мекенжайымыз:</p>
+  <p class="caps" id="city">Шымкент қаласы</p>
+  <p class="caps" id="address">Аль-Фараби даңғылы, 74</p>
+  <p class="venue" id="venue">«Qurmet banket hall»</p>
+  <p class="caps">МЕЙРАМХАНАСЫ</p>
+
+  <div class="row">
+    <a class="pill pill--wine" id="map-2gis" target="_blank" rel="noopener" hidden>КАРТАНЫ АШУ</a>
+    <a class="pill pill--wine" id="map-google" target="_blank" rel="noopener" hidden>GOOGLE MAPS</a>
+  </div>
+</section>
+
+<!-- ══ 5. Кері санақ ═════════════════════════════════════════ -->
+<section class="s wine wine--deep">
+  <svg class="tear tear--up" viewBox="0 0 1000 30" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 0v17c40 7 82-6 132 2s78-8 133-1 88-8 148 0 88-7 148 1 84-6 144 1 90-7 150 1 76-5 145 3V0z"/>
+  </svg>
+
+  <h2 class="caps caps--big">ТОЙ САЛТАНАТЫНА ДЕЙІН:</h2>
+  <div class="count" id="count">
+    <div class="count-cell"><b id="c-d">00</b><span>КҮН</span></div>
+    <div class="count-cell"><b id="c-h">00</b><span>САҒАТ</span></div>
+    <div class="count-cell"><b id="c-m">00</b><span>МИНУТ</span></div>
+    <div class="count-cell"><b id="c-s">00</b><span>СЕКУНД</span></div>
+  </div>
+
+  <svg class="tear tear--down" viewBox="0 0 1000 30" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 30V13c40-7 82 6 132-2s78 8 133 1 88 8 148 0 88 7 148-1 84 6 144-1 90 7 150-1 76 5 145-3v23z"/>
+  </svg>
+</section>
+
+<!-- ══ 6. Той иелері ═════════════════════════════════════════ -->
+<section class="s cream s--hosts">
+  <p class="script script--l">Той иелері:</p>
+  <p class="hosts" id="hosts">Бекболат &amp; Алтынай</p>
+</section>
+
+<!-- ══ 7. Сауалнама ══════════════════════════════════════════ -->
+<section class="s cream" id="rsvp">
+  <p class="script script--xl">Сауалнама</p>
+  <p class="caps note">
+    СІЗДІҢ ЖАУАБЫҢЫЗ ТОЙДЫ ҰЙЫМДАСТЫРУҒА
+    КӨМЕГІН ТИГІЗЕДІ, АЛДЫН АЛА РАХМЕТ
+  </p>
+
+  <form class="form" id="rsvp-form">
+    <label class="fld">
+      <span class="caps">ЕСІМІҢІЗ</span>
+      <input type="text" id="f-name" maxlength="60" autocomplete="name" required>
+    </label>
+
+    <fieldset class="fld">
+      <legend class="caps">ТОЙҒА КЕЛЕ АЛАСЫЗ БА?</legend>
+      <div id="f-answers"></div>
+    </fieldset>
+
+    <div class="fld" id="f-guests-wrap" hidden>
+      <span class="caps">ҚОНАҚТАР САНЫ?</span>
+      <div class="counter">
+        <button type="button" id="g-minus" aria-label="Азайту">−</button>
+        <output id="g-val">1</output>
+        <button type="button" id="g-plus" aria-label="Көбейту">+</button>
+      </div>
     </div>
-    <div class="scroll-hint" aria-hidden="true">
-      <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-  </section>
 
-  <!-- ── Шақыру мәтіні ─────────────────────────────────────── -->
-  <section class="card reveal">
-    <h2>Шақыру</h2>
-    <p class="lead">
-      Аяулы қызымыз <b id="bride-2">Айсұлу</b> өмірлік жарын тауып,
-      жаңа шаңырақ көтергелі отыр.
-    </p>
-    <p class="lead">
-      Осы қуанышты күні ақ дастарханымыздың қадірлі қонағы болып,
-      ізгі тілегіңізбен ақ батаңызды беруіңізді сұраймыз.
-    </p>
-    <p class="sign">Ізетпен, <span id="parents">Ерлан мен Гүлнар</span></p>
-  </section>
+    <label class="fld">
+      <span class="caps">ТІЛЕГІҢІЗ</span>
+      <textarea id="f-note" rows="3" maxlength="500"></textarea>
+    </label>
 
-  <!-- ── Мекенжайы ─────────────────────────────────────────── -->
-  <section class="card reveal">
-    <h2>Мекенжайы</h2>
-    <p class="venue" id="venue">Достар мейрамханасы</p>
-    <p class="addr" id="address">Алматы қ., Абай даңғылы, 150</p>
-    <div class="row">
-      <a class="btn btn--ghost" id="map-2gis" target="_blank" rel="noopener" hidden>2GIS-те ашу</a>
-      <a class="btn btn--ghost" id="map-google" target="_blank" rel="noopener" hidden>Google Maps</a>
-    </div>
-  </section>
+    <button type="submit" class="send" id="f-send">ЖІБЕРУ</button>
+    <p class="err" id="f-err" hidden role="alert"></p>
+  </form>
 
-  <!-- ── RSVP ──────────────────────────────────────────────── -->
-  <section class="card reveal" id="rsvp">
-    <h2>Тойға келесіз бе?</h2>
-    <p class="hint">Жауабыңызды төмендегі батырмамен білдіріңіз</p>
+  <div class="done" id="rsvp-done" hidden>
+    <p class="script script--l" id="done-title">Рақмет!</p>
+    <p class="caps" id="done-text"></p>
+    <button type="button" class="link" id="redo">ЖАУАПТЫ ӨЗГЕРТУ</button>
+  </div>
+</section>
 
-    <div class="choice" role="group" aria-label="Жауап">
-      <button type="button" class="btn btn--choice" data-answer="Келемін">Келемін</button>
-      <button type="button" class="btn btn--choice" data-answer="Келе алмаймын">Келе алмаймын</button>
-    </div>
+<!-- ══ 8. Подвал ═════════════════════════════════════════════ -->
+<footer class="s wine">
+  <svg class="tear tear--up" viewBox="0 0 1000 30" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 0v17c40 7 82-6 132 2s78-8 133-1 88-8 148 0 88-7 148 1 84-6 144 1 90-7 150 1 76-5 145 3V0z"/>
+  </svg>
 
-    <form class="form" id="rsvp-form" hidden>
-      <label class="field">
-        <span>Атыңыз</span>
-        <input type="text" id="f-name" maxlength="60" autocomplete="name" required>
-      </label>
-
-      <label class="field" id="f-guests-wrap">
-        <span>Қанша адам боласыз?</span>
-        <select id="f-guests">
-          <option>1</option><option>2</option><option>3</option>
-          <option>4</option><option>5</option><option>5+</option>
-        </select>
-      </label>
-
-      <label class="field">
-        <span>Тілегіңіз <i>(қаласаңыз)</i></span>
-        <textarea id="f-note" rows="3" maxlength="500"></textarea>
-      </label>
-
-      <button type="submit" class="btn btn--gold" id="f-send">Жіберу</button>
-      <p class="err" id="f-err" hidden role="alert"></p>
-    </form>
-
-    <div class="done" id="rsvp-done" hidden>
-      <div class="rule" aria-hidden="true"><span>❦</span></div>
-      <p class="done-title" id="done-title">Рақмет!</p>
-      <p class="done-text" id="done-text"></p>
-      <button type="button" class="link" id="redo">Жауапты өзгерту</button>
-    </div>
-  </section>
-
-  <!-- ── Байланыс ──────────────────────────────────────────── -->
-  <section class="card reveal">
-    <h2>Байланыс</h2>
-    <ul class="contacts" id="contacts"></ul>
-  </section>
-
-  <footer>
-    <div class="orn" aria-hidden="true"></div>
-    <p>Той думанды болсын!</p>
-  </footer>
-
-</main>
+  <ul class="contacts" id="contacts"></ul>
+  <p class="script">Той думанды болсын!</p>
+  <button type="button" class="link" id="totop">ЖОҒАРЫҒА КӨТЕРУ ↑</button>
+</footer>
 
 <audio id="bg-music" loop preload="none"></audio>
 

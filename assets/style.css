@@ -1,27 +1,26 @@
 /* ═══════════════════════════════════════════════════════════════
-   Қыз ұзату — шақыру. Mobile-first.
+   Қыз ұзату — шақыру. Mobile-first, бордо + золото.
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  --cream:      #FBF7F0;
-  --cream-deep: #F3EADA;
-  --ink:        #2E2617;
-  --ink-soft:   #6B5E48;
-  --gold:       #B08D3F;
-  --gold-lite:  #DCC182;
-  --gold-deep:  #8C6D28;
-  --line:       #E2D5BC;
+  --wine:      #7C1616;
+  --wine-deep: #640F0F;
+  --gold:      #E4AA5C;
+  --gold-dim:  #B98B45;
+  --cream:     #F7F2E9;
+  --cream-hi:  #FFFCF6;
+  --ink:       #3A2A22;
 
-  --serif:  'Playfair Display', 'PT Serif', Georgia, 'Times New Roman', serif;
-  --body:   'PT Serif', Georgia, 'Times New Roman', serif;
+  --serif:  'Cormorant Infant', Georgia, 'Times New Roman', serif;
+  --script: 'Caveat', 'Cormorant Infant', cursive;
 
-  --pad: clamp(20px, 6vw, 40px);
+  --pad: clamp(22px, 7vw, 44px);
 }
 
 * { box-sizing: border-box; }
 
-/* Атрибут hidden обязан побеждать: у .music, .choice, .btn и .field
-   задан свой display, а он перебивает display:none от [hidden]. */
+/* Атрибут hidden обязан побеждать: у многих классов ниже задан свой
+   display, а он перебивает display:none, который даёт [hidden]. */
 [hidden] { display: none !important; }
 
 html { -webkit-text-size-adjust: 100%; }
@@ -29,353 +28,362 @@ html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
   background: var(--cream);
-  background-image:
-    radial-gradient(circle at 18% 12%, rgba(176,141,63,.055), transparent 42%),
-    radial-gradient(circle at 82% 78%, rgba(176,141,63,.045), transparent 45%);
-  background-attachment: fixed;
   color: var(--ink);
-  font-family: var(--body);
+  font-family: var(--serif);
   font-size: 17px;
-  line-height: 1.7;
+  line-height: 1.6;
   overflow-x: hidden;
 }
 
-main {
-  max-width: 620px;
-  margin: 0 auto;
-  padding: clamp(16px, 5vw, 32px) clamp(14px, 4vw, 24px) 0;
-}
-
-/* ── Орнамент ─────────────────────────────────────────────── */
-.orn {
-  height: 36px;
-  background: url('ornament.svg') repeat-x center / auto 36px;
-  opacity: .85;
-}
-.orn--flip { transform: scaleY(-1); }
-
-.rule {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin: 26px auto;
-  max-width: 240px;
-  color: var(--gold);
-}
-.rule::before, .rule::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-lite), transparent);
-}
-.rule span { font-size: 15px; line-height: 1; }
-
-/* ── Бірінші экран ────────────────────────────────────────── */
-.hero { padding: 8px 0 4px; }
-
-.frame {
+/* ── Секции и рваные края ─────────────────────────────────── */
+.s {
   position: relative;
-  padding: 26px var(--pad) 30px;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: clamp(40px, 11vw, 64px) var(--pad);
   text-align: center;
-  background: linear-gradient(180deg, #FFFDF8, var(--cream-deep));
-  border: 1px solid var(--line);
-  border-radius: 3px;
-  box-shadow: 0 1px 0 #fff inset, 0 14px 40px -24px rgba(46,38,23,.45);
 }
-/* внутренняя золотая линия */
-.frame::after {
-  content: '';
+
+/* два кремовых блока подряд не должны давать двойной отступ */
+.cream + .cream { padding-top: 0; }
+
+.cream {
+  background: var(--cream);
+  /* лёгкая фактура бумаги */
+  background-image:
+    repeating-linear-gradient(0deg,   rgba(124,22,22,.014) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg,  rgba(124,22,22,.014) 0 1px, transparent 1px 4px);
+  color: var(--wine);
+}
+
+.wine {
+  background: var(--wine);
+  color: var(--wine);              /* цвет для рваных краёв */
+}
+.wine--deep { background: var(--wine-deep); color: var(--wine-deep); }
+
+.tear {
   position: absolute;
-  inset: 7px;
-  border: 1px solid rgba(176,141,63,.35);
-  border-radius: 2px;
+  left: -1px;
+  width: calc(100% + 2px);
+  height: 30px;
+  fill: currentColor;
   pointer-events: none;
+  z-index: 2;
 }
+.tear--down { bottom: -29px; }
+.tear--up   { top: -29px; }
 
-.greet {
-  margin: 22px 0 0;
-  font-family: var(--serif);
-  font-size: clamp(19px, 5.4vw, 25px);
+/* ── Типографика ──────────────────────────────────────────── */
+.caps {
+  margin: 0;
   font-weight: 500;
-  letter-spacing: .01em;
-}
-#guest { color: var(--gold-deep); }   /* без nowrap: длинные имена должны переноситься */
-
-.eyebrow {
-  margin: 30px 0 0;
-  font-size: 14px;
-  letter-spacing: .22em;
+  font-size: clamp(15px, 4.1vw, 18px);
+  line-height: 1.55;
+  letter-spacing: .12em;
   text-transform: uppercase;
-  color: var(--ink-soft);
 }
+.caps--big { font-size: clamp(20px, 5.6vw, 26px); letter-spacing: .08em; }
+.wine .caps, .wine .script, .wine .cal { color: var(--cream); }
+
+.script {
+  margin: 0;
+  font-family: var(--script);
+  font-weight: 500;
+  line-height: 1.2;
+  font-size: clamp(28px, 8vw, 38px);
+}
+.script--l  { font-size: clamp(34px, 10vw, 46px); }
+.script--xl { font-size: clamp(42px, 13vw, 60px); }
+.cream .script { color: var(--wine); }
+
+.mt { margin-top: 28px; }
+
+/* ── 1. Первый экран ──────────────────────────────────────── */
+.hero { padding-top: clamp(46px, 13vw, 76px); }
 
 .bride {
-  margin: 6px 0 2px;
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(46px, 15vw, 76px);
-  line-height: 1.05;
-  background: linear-gradient(175deg, var(--gold-lite) 4%, var(--gold) 44%, var(--gold-deep) 96%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: var(--gold);
-  -webkit-text-fill-color: transparent;
-  /* ә ғ қ ң ө ұ ү һ имеют выносные элементы — даём воздух */
-  padding: .06em .04em .12em;
-}
-
-.occasion {
-  margin: 4px 0 0;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(19px, 5vw, 24px);
-  color: var(--ink-soft);
-}
-
-.when { margin: 0 0 22px; }
-.when-date, .when-time { display: block; }
-.when-date {
-  font-family: var(--serif);
-  font-size: clamp(21px, 5.6vw, 27px);
-  letter-spacing: .01em;
-}
-.when-time {
-  margin-top: 4px;
-  font-size: 15px;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-
-.scroll-hint {
-  display: flex;
-  justify-content: center;
-  padding: 18px 0 2px;
-  color: var(--gold);
-  animation: bob 2.4s ease-in-out infinite;
-}
-.scroll-hint svg { width: 26px; height: 26px; }
-@keyframes bob {
-  0%, 100% { transform: translateY(0);   opacity: .55; }
-  50%      { transform: translateY(6px); opacity: 1; }
-}
-
-/* ── Блоки ────────────────────────────────────────────────── */
-.card {
-  padding: clamp(26px, 7vw, 40px) var(--pad);
-  text-align: center;
-  border-top: 1px solid var(--line);
-}
-.card:first-of-type { border-top: none; }
-
-h2 {
-  margin: 0 0 20px;
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: 14px;
-  letter-spacing: .26em;
-  text-transform: uppercase;
-  color: var(--gold-deep);
-}
-
-.lead { margin: 0 0 14px; }
-.lead b { font-weight: 700; color: var(--gold-deep); }
-
-.sign {
-  margin: 22px 0 0;
-  font-family: var(--serif);
-  font-style: italic;
-  color: var(--ink-soft);
-}
-
-.venue {
   margin: 0;
-  font-family: var(--serif);
-  font-size: clamp(23px, 6vw, 29px);
+  font-weight: 300;
+  font-size: clamp(40px, 12vw, 60px);
+  letter-spacing: .3em;
+  text-indent: .3em;             /* компенсируем трекинг справа */
+  text-transform: uppercase;
+  color: var(--cream);
 }
-.addr { margin: 6px 0 22px; color: var(--ink-soft); }
+.hero .script--xl { color: var(--gold); margin-top: 2px; }
 
-.hint { margin: -12px 0 22px; font-size: 15px; color: var(--ink-soft); }
-
-/* ── Кнопки ───────────────────────────────────────────────── */
-.row, .choice {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
+.arch {
+  width: min(64%, 250px);
+  aspect-ratio: 3 / 4;
+  margin: clamp(24px, 7vw, 38px) auto 0;
+  border: 1px solid var(--gold);
+  border-radius: 999px 999px 10px 10px;
+  overflow: hidden;
+  background: rgba(255, 252, 246, .06);
 }
+.arch img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-.btn {
+/* ── Кнопки-пилюли ────────────────────────────────────────── */
+.row { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+
+.pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 50px;
-  padding: 13px 26px;
+  min-height: 48px;
+  margin-top: clamp(24px, 7vw, 36px);
+  padding: 12px 30px;
   border: 1px solid var(--gold);
-  border-radius: 2px;
-  background: transparent;
-  color: var(--gold-deep);
-  font-family: var(--body);
-  font-size: 16px;
-  line-height: 1.2;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--wine);
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .16em;
   text-decoration: none;
   cursor: pointer;
-  transition: background .18s, color .18s, border-color .18s, transform .12s;
   -webkit-tap-highlight-color: transparent;
+  transition: opacity .18s, transform .12s;
 }
-.btn:active { transform: scale(.98); }
+.pill:active { transform: scale(.98); }
+.pill[aria-pressed="true"] { background: transparent; color: var(--gold); }
 
-.btn--ghost:hover { background: rgba(176,141,63,.09); }
-
-.btn--choice { flex: 1 1 44%; min-width: 150px; }
-.btn--choice[aria-pressed="true"] {
-  background: var(--gold);
-  border-color: var(--gold);
-  color: #fff;
+.pill--wine {
+  background: var(--wine);
+  border-color: var(--wine);
+  color: var(--cream);
 }
 
-.btn--gold {
-  width: 100%;
-  margin-top: 6px;
-  background: linear-gradient(180deg, var(--gold-lite), var(--gold));
-  border-color: var(--gold-deep);
-  color: #fff;
+/* ── 2. Шақыру ────────────────────────────────────────────── */
+.audience { margin-top: 6px; }
+#guest-line { display: inline; }
+
+/* ── 3. Календарь ─────────────────────────────────────────── */
+.s--cal .script--xl { color: var(--gold); font-size: clamp(30px, 9vw, 44px); }
+
+.cal {
+  margin: clamp(20px, 6vw, 30px) auto;
+  border-collapse: collapse;
+  font-size: clamp(14px, 3.9vw, 17px);
+}
+.cal th {
+  padding: 6px 2px 12px;
+  font-weight: 500;
+  font-size: .82em;
   letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--gold);
 }
-.btn--gold:disabled { opacity: .55; cursor: default; }
+.cal td {
+  width: clamp(34px, 10vw, 44px);
+  height: clamp(32px, 9vw, 40px);
+  padding: 0;
+  text-align: center;
+  vertical-align: middle;
+  font-weight: 400;
+}
+/* Сердечко вокруг дня торжества */
+.cal td.mark {
+  position: relative;
+  color: var(--cream);
+  font-weight: 600;
+}
+.cal td.mark::before {
+  content: '';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 2.05em;
+  height: 2.05em;
+  transform: translate(-50%, -52%);
+  background: no-repeat center / contain
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 20.6C6.5 16.6 3 13.4 3 9.8 3 7.1 5.1 5 7.8 5c1.6 0 3.1.8 4.2 2.1C13.1 5.8 14.6 5 16.2 5 18.9 5 21 7.1 21 9.8c0 3.6-3.5 6.8-9 10.8z' fill='none' stroke='%23E4AA5C' stroke-width='1.3'/%3E%3C/svg%3E");
+}
+
+/* ── 4. Мекенжайы ─────────────────────────────────────────── */
+.venue {
+  margin: 10px 0 2px;
+  font-style: italic;
+  font-size: clamp(26px, 7.4vw, 34px);
+  font-weight: 500;
+}
+
+/* ── 5. Кері санақ ────────────────────────────────────────── */
+.count {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(20px, 6vw, 30px);
+}
+.count-cell {
+  flex: 1 1 0;
+  max-width: 92px;
+  padding: 0 4px;
+  border-left: 1px solid rgba(228, 170, 92, .35);
+}
+.count-cell:first-child { border-left: 0; }
+.count-cell b {
+  display: block;
+  font-weight: 400;
+  font-size: clamp(26px, 7.4vw, 34px);
+  line-height: 1.1;
+  color: var(--cream);
+  font-variant-numeric: tabular-nums;
+}
+.count-cell span {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  letter-spacing: .1em;
+  color: var(--gold);
+}
+
+/* ── 6. Той иелері ────────────────────────────────────────── */
+.hosts {
+  margin: 8px 0 0;
+  font-size: clamp(21px, 5.8vw, 27px);
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+/* ── 7. Сауалнама ─────────────────────────────────────────── */
+.note { margin: 12px auto 0; max-width: 36ch; font-size: 15px; opacity: .85; }
+
+.form { margin-top: clamp(26px, 7vw, 36px); text-align: left; }
+
+.fld { display: block; margin-bottom: 24px; border: 0; padding: 0; }
+.fld > span, .fld > legend { display: block; margin-bottom: 10px; }
+
+input[type="text"], textarea {
+  width: 100%;
+  min-height: 52px;
+  padding: 13px 18px;
+  border: 1px solid var(--wine);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--wine);
+  font-family: var(--serif);
+  font-size: 16px;              /* < 16px → iOS зумит страницу */
+}
+textarea { min-height: 90px; border-radius: 22px; resize: vertical; }
+input[type="text"]:focus, textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(124, 22, 22, .15);
+}
+
+/* Радио-варианты */
+.opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 9px 0;
+  cursor: pointer;
+}
+.opt input { position: absolute; opacity: 0; pointer-events: none; }
+.opt .dot {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-top: 2px;
+  border: 1px solid var(--wine);
+  border-radius: 50%;
+  position: relative;
+}
+.opt input:checked + .dot::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: var(--wine);
+}
+.opt input:focus-visible + .dot { box-shadow: 0 0 0 3px rgba(124, 22, 22, .2); }
+.opt .txt { letter-spacing: .1em; text-transform: uppercase; font-size: 15px; }
+
+/* Счётчик гостей */
+.counter { display: flex; align-items: center; gap: 16px; }
+.counter button {
+  width: 46px;
+  height: 46px;
+  border: 0;
+  background: none;
+  color: var(--wine);
+  font-family: var(--serif);
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+}
+.counter output {
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 52px;
+  border: 1px solid var(--wine);
+  border-radius: 999px;
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+}
+
+.send {
+  width: 100%;
+  min-height: 58px;
+  border: 0;
+  background: var(--wine);
+  color: var(--cream);
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: .2em;
+  cursor: pointer;
+}
+.send:disabled { opacity: .6; cursor: default; }
+
+.err {
+  margin: 14px 0 0;
+  padding: 11px 14px;
+  background: rgba(124, 22, 22, .08);
+  color: var(--wine);
+  font-size: 15px;
+  letter-spacing: .04em;
+}
+
+.done { animation: fade .4s ease both; }
+.done .caps { margin-top: 10px; }
 
 .link {
-  margin-top: 14px;
+  margin-top: 18px;
   padding: 10px 4px;
   border: 0;
   background: none;
-  color: var(--gold-deep);
-  font-family: var(--body);
-  font-size: 15px;
+  color: inherit;
+  font-family: var(--serif);
+  font-size: 14px;
+  letter-spacing: .16em;
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: 4px;
   cursor: pointer;
 }
-
-/* ── Форма ────────────────────────────────────────────────── */
-.form {
-  margin-top: 22px;
-  text-align: left;
-  animation: fade .35s ease both;
-}
-
-.field { display: block; margin-bottom: 16px; }
-.field > span {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 14px;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-.field > span i { font-style: italic; text-transform: none; letter-spacing: 0; }
-
-input, select, textarea {
-  width: 100%;
-  min-height: 50px;
-  padding: 12px 14px;
-  border: 1px solid var(--line);
-  border-radius: 2px;
-  background: #FFFDF8;
-  color: var(--ink);
-  font-family: var(--body);
-  font-size: 16px;               /* < 16px → iOS зумит страницу */
-  line-height: 1.4;
-}
-textarea { min-height: 88px; resize: vertical; }
-input:focus, select:focus, textarea:focus {
-  outline: none;
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(176,141,63,.14);
-}
-
-.err {
-  margin: 12px 0 0;
-  padding: 10px 12px;
-  border-radius: 2px;
-  background: #FBEAE7;
-  color: #8E2C1B;
-  font-size: 15px;
-}
-
-.done { animation: fade .35s ease both; }
-.done-title {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: clamp(26px, 7vw, 34px);
-  color: var(--gold-deep);
-}
-.done-text { margin: 8px 0 0; color: var(--ink-soft); }
 
 @keyframes fade {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: none; }
 }
 
-/* ── Контакты ─────────────────────────────────────────────── */
-.contacts { margin: 0; padding: 0; list-style: none; }
-.contacts li + li { margin-top: 10px; }
-.contacts .who { color: var(--ink-soft); }
+/* ── 8. Подвал ────────────────────────────────────────────── */
+footer .script { color: var(--gold); margin-bottom: 4px; }
+footer .link   { color: var(--cream); }
+
+.contacts { margin: 0 0 18px; padding: 0; list-style: none; }
+.contacts li + li { margin-top: 8px; }
 .contacts a {
-  display: inline-block;
-  padding: 6px 2px;
-  font-family: var(--serif);
-  font-size: 21px;
-  color: var(--gold-deep);
+  color: var(--gold);
+  font-size: 20px;
   text-decoration: none;
-  border-bottom: 1px solid var(--gold-lite);
+  border-bottom: 1px solid rgba(228, 170, 92, .5);
 }
-
-/* ── Подвал ───────────────────────────────────────────────── */
-footer { padding: 8px 0 40px; text-align: center; }
-footer p {
-  margin: 20px 0 0;
-  font-family: var(--serif);
-  font-style: italic;
-  color: var(--ink-soft);
-}
-
-/* ── Кнопка музыки ────────────────────────────────────────── */
-.music {
-  position: fixed;
-  right: max(14px, env(safe-area-inset-right));
-  bottom: max(14px, env(safe-area-inset-bottom));
-  z-index: 10;
-  width: 50px;
-  height: 50px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--gold);
-  border-radius: 50%;
-  background: rgba(251,247,240,.94);
-  backdrop-filter: blur(6px);
-  color: var(--gold-deep);
-  cursor: pointer;
-  box-shadow: 0 6px 20px -10px rgba(46,38,23,.6);
-}
-.music svg { width: 22px; height: 22px; }
-.music[aria-pressed="true"] { background: var(--gold); color: #fff; }
-.music[aria-pressed="true"] svg { animation: pulse 1.6s ease-in-out infinite; }
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: .5; }
-}
-
-/* ── Появление при скролле ────────────────────────────────── */
-.reveal {
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity .7s ease, transform .7s ease;
-}
-.reveal.in { opacity: 1; transform: none; }
+.contacts .who { color: var(--cream); letter-spacing: .1em; text-transform: uppercase; font-size: 14px; }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal { opacity: 1; transform: none; transition: none; }
-  .scroll-hint, .music[aria-pressed="true"] svg { animation: none; }
-  .form, .done { animation: none; }
+  .done { animation: none; }
+  * { scroll-behavior: auto !important; }
 }
