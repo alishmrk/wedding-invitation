@@ -56,11 +56,12 @@ window.CONFIG = {
   rsvpUrl: 'https://script.google.com/macros/s/AKfycbwHy8jfD2eXM_5FVpP2z2h9z4vVJdr_XyjX_kRKzfCFbjNdTC7wNMNEu8IXuNbAEuck2Q/exec',
 
   // Варианты ответа. Текст уходит в таблицу дословно.
-  // «guests: true» — для этого варианта спрашиваем количество гостей.
+  // «count» — сколько человек придёт при этом ответе; 0 = не придёт.
+  // Гостя ни о чём не спрашиваем — число берётся отсюда.
   answers: [
-    { text: 'Иә, әрине',                    guests: true  },
-    { text: 'Жұбайыммен келемін',           guests: true  },
-    { text: 'Өкінішке орай, келе алмаймын', guests: false },
+    { text: 'Иә, әрине',                    count: 1 },
+    { text: 'Жұбайыммен келемін',           count: 2 },
+    { text: 'Өкінішке орай, келе алмаймын', count: 0 },
   ],
 
   // ── Музыка ───────────────────────────────────────────────────

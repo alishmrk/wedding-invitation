@@ -158,14 +158,12 @@
   var doneBox   = $('rsvp-done');
   var errBox    = $('f-err');
   var nameInput = $('f-name');
-  var guestWrap = $('f-guests-wrap');
-  var guestVal  = $('g-val');
   var sendBtn   = $('f-send');
 
   var STORE = 'uzatu-rsvp';
   var ANSWERS = Array.isArray(C.answers) && C.answers.length ? C.answers : [
-    { text: 'Келемін',         guests: true  },
-    { text: 'Келе алмаймын',   guests: false },
+    { text: 'Келемін',       count: 1 },
+    { text: 'Келе алмаймын', count: 0 },
   ];
 
   if (guest) nameInput.value = guest;
@@ -190,7 +188,8 @@
       input.name = 'answer';
       input.value = a.text;
       input.required = true;
-      input.dataset.guests = a.guests ? '1' : '';
+      /* сколько человек придёт при этом ответе — спрашивать не нужно */
+      input.dataset.count = String(a.count != null ? a.count : 1);
 
       var dot = document.createElement('span');
       dot.className = 'dot';
@@ -202,20 +201,7 @@
       label.append(input, dot, txt);
       box.appendChild(label);
 
-      input.addEventListener('change', function () {
-        guestWrap.hidden = !input.dataset.guests;
-      });
-      if (i === 0) { /* по умолчанию ничего не выбрано */ }
     });
-  })();
-
-  /* Счётчик гостей */
-  (function counter() {
-    var n = 1;
-    var draw = function () { guestVal.textContent = n; };
-    $('g-minus').addEventListener('click', function () { if (n > 1)  { n--; draw(); } });
-    $('g-plus') .addEventListener('click', function () { if (n < 20) { n++; draw(); } });
-    guestWrap.getCount = function () { return n; };
   })();
 
   function chosen() {
@@ -264,11 +250,12 @@
     if (!who) { nameInput.focus(); return; }
     if (!pick) { return; }
 
-    var coming = !!pick.dataset.guests;
+    var count  = parseInt(pick.dataset.count, 10) || 0;
+    var coming = count > 0;
     var payload = {
       name:   who,
       answer: pick.value,
-      guests: coming ? String(guestWrap.getCount()) : '',
+      guests: coming ? String(count) : '',
       note:   $('f-note').value.trim(),
       link:   guest,
       page:   location.href,
@@ -310,7 +297,6 @@
     form.hidden = false;
     var pick = chosen();
     if (pick) pick.checked = false;
-    guestWrap.hidden = true;
     form.scrollIntoView({ block: 'center', behavior: 'smooth' });
   });
 

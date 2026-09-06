@@ -1,0 +1,25 @@
+<!doctype html><meta charset="utf-8"><body>
+<script>
+fetch('assets/music.mp3').then(function(r){return r.arrayBuffer();}).then(function(buf){
+  var ctx=new OfflineAudioContext(2,44100,44100);   // рендер без устройства вывода
+  return ctx.decodeAudioData(buf);
+}).then(function(audio){
+  var ch=audio.getChannelData(0), n=ch.length;
+  var peak=0, sum=0, silent=0;
+  for(var i=0;i<n;i++){var v=Math.abs(ch[i]); if(v>peak)peak=v; sum+=v*v; if(v<0.0005)silent++;}
+  var rms=Math.sqrt(sum/n);
+  // проверим, что звук есть и в начале, и ближе к концу
+  function rmsAt(frac){
+    var s=Math.floor(n*frac), e=Math.min(n,s+audio.sampleRate), q=0;
+    for(var i=s;i<e;i++)q+=ch[i]*ch[i];
+    return Math.sqrt(q/(e-s));
+  }
+  document.title='DBG|длительность='+audio.duration.toFixed(1)+'с'
+    +'|каналов='+audio.numberOfChannels+'|частота='+audio.sampleRate+' Гц'
+    +'|пик='+peak.toFixed(3)+'|RMS='+rms.toFixed(4)
+    +'|тишина='+(100*silent/n).toFixed(1)+'%'
+    +'|RMS в 10%='+rmsAt(0.10).toFixed(4)
+    +'|RMS в 50%='+rmsAt(0.50).toFixed(4)
+    +'|RMS в 90%='+rmsAt(0.90).toFixed(4);
+}).catch(function(e){document.title='DBG|ОШИБКА ДЕКОДИРОВАНИЯ: '+e.message;});
+</script>
