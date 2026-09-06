@@ -113,7 +113,11 @@
   <form class="form" id="rsvp-form">
     <label class="fld">
       <span class="caps">ЕСІМІҢІЗ</span>
-      <input type="text" id="f-name" maxlength="60" autocomplete="name" required>
+      <!-- autocomplete="name" заставлял браузер подставлять имя из профиля,
+           а оно у большинства сохранено латиницей. Имя поля тоже нестандартное,
+           чтобы Chrome не опознал его эвристикой и не предложил автозаполнение. -->
+      <input type="text" id="f-name" name="qonaq" maxlength="60"
+             autocomplete="off" autocapitalize="words" spellcheck="false" required>
     </label>
 
     <fieldset class="fld">
