@@ -322,19 +322,24 @@
     audio.src = C.music;
     btn.hidden = false;
 
+    /* Состояние кнопки ведём от событий плеера, а не от промиса
+       play(): он резолвится только когда звук реально пошёл, а на
+       части устройств может висеть — и подпись бы не переключилась,
+       хотя музыка уже играет. */
+    function sync() {
+      var on = !audio.paused;
+      btn.setAttribute('aria-pressed', String(on));
+      btn.textContent = on ? 'ӘУЕНДІ ӨШІРУ' : 'ӘУЕНДІ ҚОСУ';
+    }
+    ['play', 'pause', 'ended'].forEach(function (ev) {
+      audio.addEventListener(ev, sync);
+    });
+
     /* Автозапуска нет намеренно: браузеры его блокируют,
        и звук без спроса раздражает. Только по клику. */
     btn.addEventListener('click', function () {
-      if (audio.paused) {
-        audio.play().then(function () {
-          btn.setAttribute('aria-pressed', 'true');
-          btn.textContent = 'ӘУЕНДІ ӨШІРУ';
-        }).catch(function () {});
-      } else {
-        audio.pause();
-        btn.setAttribute('aria-pressed', 'false');
-        btn.textContent = 'ӘУЕНДІ ҚОСУ';
-      }
+      if (audio.paused) audio.play().catch(sync);   // отказ — вернуть подпись
+      else audio.pause();
     });
   })();
 
